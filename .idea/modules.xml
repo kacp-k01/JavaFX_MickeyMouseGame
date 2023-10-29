@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/JavaFX_MickeyMouseGame.iml" filepath="$PROJECT_DIR$/JavaFX_MickeyMouseGame.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Mickey-Mouse-Game.iml" filepath="$PROJECT_DIR$/Mickey-Mouse-Game.iml" />
     </modules>
   </component>
 </project>
