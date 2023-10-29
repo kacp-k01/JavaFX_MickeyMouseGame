@@ -1,25 +1,19 @@
-package FullPackage.Threads;
+package main.FullPackage.Threads;
 
-import FullPackage.Model.Model;
-import FullPackage.View.GameStage;
-import FullPackage.View.HighScoreView;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import main.FullPackage.Model.Model;
+import main.FullPackage.View.GameStage;
+import main.FullPackage.View.HighScoreView;
 import javafx.application.Platform;
 
-
-//thread class for loading falling eggs in the game
+@AllArgsConstructor
+@Getter
 public class EggLoader extends Thread {
     TimeCounter timeCounter;
     GameStage gameStage;
     Model model;
     HighScoreView HS_Score;
-
-    public EggLoader(TimeCounter timeCounter, GameStage gameStage,Model model,  HighScoreView HS_Score){
-
-        this.timeCounter=timeCounter;
-        this.gameStage=gameStage;
-        this.model=model;
-        this.HS_Score=HS_Score;
-    }
 
     @Override
     public void run() {
@@ -27,31 +21,26 @@ public class EggLoader extends Thread {
         int poz = 1;
 
         while (true) {
-
-            int speed = 2000 - timeCounter.getDifficulty() * 10;
+            int speed = 2000 - TimeCounter.getDifficulty() * 10;
             if (speed < 500)
                 speed = 500;
 
-            int HighFallSpeed = 800 - timeCounter.getDifficulty() * 5;
+            int HighFallSpeed = 800 - TimeCounter.getDifficulty() * 5;
             if (HighFallSpeed < 400)
                 HighFallSpeed = 400;
 
-            int LowlFallSpeed = 400 - timeCounter.getDifficulty() * 5;
+            int LowlFallSpeed = 400 - TimeCounter.getDifficulty() * 5;
             if (LowlFallSpeed < 200)
                 LowlFallSpeed = 200;
 
-
             while (a == 1) {
                 if (gameStage.getCounterLife() == 0) {
-                    Platform.runLater(() -> model.exitActionEGGLoad(timeCounter, HS_Score, model, gameStage));
-                    stop();
+                    Platform.runLater(() -> Model.exitActionEGGLoad(timeCounter, HS_Score, gameStage));
+                    interrupt();
                 }
-
                 int los = (int) (4 * Math.random());
 
-
                 if (los == 0) {
-//eggs from top-left nest - 1
                     poz = 1;
                     gameStage.getEGG().setCenterX(100.0f);
                     gameStage.getEGG().setCenterY(275.0f);
@@ -60,13 +49,11 @@ public class EggLoader extends Thread {
                     int finalSpeed = speed;
                     Platform.runLater(() -> {
                         gameStage.getBackG().getChildren().add(gameStage.getEGG());
-                        model.EggAnimation(gameStage, 100, 275, 300, 380, finalSpeed);
+                        Model.EggAnimation(gameStage, 100, 275, 300, 380, finalSpeed);
                     });
-
                 }
 
                 if (los == 1) {
-//eggs from bottom-left nest - 2
                     poz = 2;
                     gameStage.getEGG().setCenterX(100.0f);
                     gameStage.getEGG().setCenterY(445.0f);
@@ -75,12 +62,11 @@ public class EggLoader extends Thread {
                     int finalSpeed1 = speed;
                     Platform.runLater(() -> {
                         gameStage.getBackG().getChildren().add(gameStage.getEGG());
-                        model.EggAnimation(gameStage, 100, 445, 300, 550, finalSpeed1);
+                        Model.EggAnimation(gameStage, 100, 445, 300, 550, finalSpeed1);
                     });
                 }
 
                 if (los == 2) {
-//eggs from top-right nest - 3
                     poz = 3;
                     gameStage.getEGG().setCenterX(1000.0f);
                     gameStage.getEGG().setCenterY(275.0f);
@@ -89,11 +75,11 @@ public class EggLoader extends Thread {
                     int finalSpeed2 = speed;
                     Platform.runLater(() -> {
                         gameStage.getBackG().getChildren().add(gameStage.getEGG());
-                        model.EggAnimation(gameStage, 1000, 275, 800, 380, finalSpeed2);
+                        Model.EggAnimation(gameStage, 1000, 275, 800, 380, finalSpeed2);
                     });
                 }
+
                 if (los == 3) {
-//eggs from bottom-right nest - 4
                     poz = 4;
                     gameStage.getEGG().setCenterX(1000.0f);
                     gameStage.getEGG().setCenterY(445.0f);
@@ -102,7 +88,7 @@ public class EggLoader extends Thread {
                     int finalSpeed3 = speed;
                     Platform.runLater(() -> {
                         gameStage.getBackG().getChildren().add(gameStage.getEGG());
-                        model.EggAnimation(gameStage, 1000, 445, 800, 550, finalSpeed3);
+                        Model.EggAnimation(gameStage, 1000, 445, 800, 550, finalSpeed3);
                     });
                 }
 
@@ -111,24 +97,21 @@ public class EggLoader extends Thread {
                 } catch (InterruptedException e) {
                     System.out.println("Błąd licznika, zrestartuj grę");
                 }
-
                 a++;
             }
 
-
             while (a == 2) {
-
                 if (poz == 2 || poz == 4) {
                     if (gameStage.getMickeyPoz() == poz)
                         gameStage.setCounterPoint(gameStage.getCounterPoint() + 1);
                     else {
                         gameStage.setCounterLife(gameStage.getCounterLife() - 1);
                         if (poz == 2) {
-                            int finalLowlFallSpeed = LowlFallSpeed;
-                            Platform.runLater(() -> model.LowFallAnimation(gameStage, 300, 550, finalLowlFallSpeed));
+                            int finalLowFallSpeed = LowlFallSpeed;
+                            Platform.runLater(() -> Model.LowFallAnimation(gameStage, 300, 550, finalLowFallSpeed));
                         } else {
-                            int finalLowlFallSpeed1 = LowlFallSpeed;
-                            Platform.runLater(() -> model.LowFallAnimation(gameStage, 800, 550, finalLowlFallSpeed1));
+                            int finalLowFallSpeed1 = LowlFallSpeed;
+                            Platform.runLater(() -> Model.LowFallAnimation(gameStage, 800, 550, finalLowFallSpeed1));
                         }
                         try {
                             Thread.sleep(LowlFallSpeed);
@@ -138,19 +121,17 @@ public class EggLoader extends Thread {
                     }
                     Platform.runLater(() -> gameStage.getBackG().getChildren().remove(gameStage.getEGG()));
 
-                } else if((poz==3 || poz ==1) && gameStage.getMickeyPoz() == poz){
+                } else if ((poz == 3 || poz == 1) && gameStage.getMickeyPoz() == poz) {
                     gameStage.setCounterPoint(gameStage.getCounterPoint() + 1);
                     Platform.runLater(() -> gameStage.getBackG().getChildren().remove(gameStage.getEGG()));
                     poz = 0;
-                }
-
-                else {
+                } else {
                     if (poz == 1) {
                         int finalHighFallSpeed = HighFallSpeed;
-                        Platform.runLater(() -> model.HighFallAnimation(gameStage, 300, 380, finalHighFallSpeed));
+                        Platform.runLater(() -> Model.HighFallAnimation(gameStage, 300, 380, finalHighFallSpeed));
                     } else if (poz == 3) {
                         int finalHighFallSpeed1 = HighFallSpeed;
-                        Platform.runLater(() -> model.HighFallAnimation(gameStage, 800, 380, finalHighFallSpeed1));
+                        Platform.runLater(() -> Model.HighFallAnimation(gameStage, 800, 380, finalHighFallSpeed1));
                     }
                     try {
                         Thread.sleep(HighFallSpeed);
@@ -161,21 +142,19 @@ public class EggLoader extends Thread {
                 a++;
             }
 
-
             while (a == 3) {
-                if ((poz == 1&& gameStage.getMickeyPoz()==2)||(poz == 3&& gameStage.getMickeyPoz()==4)) {
+                if ((poz == 1 && gameStage.getMickeyPoz() == 2) || (poz == 3 && gameStage.getMickeyPoz() == 4)) {
                     gameStage.setCounterPoint(gameStage.getCounterPoint() + 1);
                     Platform.runLater(() -> gameStage.getBackG().getChildren().remove(gameStage.getEGG()));
-                }
-                    else if (poz==1||poz==3){
-                        gameStage.setCounterLife(gameStage.getCounterLife() - 1);
+                } else if (poz == 1 || poz == 3) {
+                    gameStage.setCounterLife(gameStage.getCounterLife() - 1);
 
                     if (poz == 1) {
                         int finalLowlFallSpeed = LowlFallSpeed;
-                        Platform.runLater(() -> model.LowFallAnimation(gameStage, 300, 550, finalLowlFallSpeed));
+                        Platform.runLater(() -> Model.LowFallAnimation(gameStage, 300, 550, finalLowlFallSpeed));
                     } else {
                         int finalLowlFallSpeed1 = LowlFallSpeed;
-                        Platform.runLater(() -> model.LowFallAnimation(gameStage, 800, 550, finalLowlFallSpeed1));
+                        Platform.runLater(() -> Model.LowFallAnimation(gameStage, 800, 550, finalLowlFallSpeed1));
                     }
 
                     try {

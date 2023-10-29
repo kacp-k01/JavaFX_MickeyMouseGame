@@ -1,4 +1,4 @@
-package FullPackage.View;
+package main.FullPackage.View;
 
 
 import javafx.animation.*;
@@ -19,134 +19,78 @@ import javafx.scene.shape.Ellipse;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-
-//actual game screen build class
-
-
+@Getter
+@Setter
 public class GameStage {
-
-    private Label TimeTimer = new Label("Time:");
     Label timer = new Label();
-
-    private Label lifeLife = new Label("Life:");
     IntegerProperty counterLife = new SimpleIntegerProperty(4);
     Label life = new Label();
-
-
-    private  Label pointPoint = new Label("Points:");
     IntegerProperty counterPoint = new SimpleIntegerProperty(0);
     Label point = new Label();
-
-    Image image1 = null;
-    Image image2 = null;
-    Image image3 = null;
-    Image image4 = null;
-
+    Image image1;
+    Image image2;
+    Image image3;
+    Image image4;
     ImageView imageView;
-
-
-
-    private Group backG = new Group();
-
-
-
+    private final Group backG = new Group();
     Ellipse EGG = new Ellipse();
-
-
-
-
     private int MickeyPoz = 1;
-
-
-    private BorderPane gamePane = new BorderPane();
-    private HBox LabelBox = new HBox();
-    private static Scene gameS;
-
-
+    private final BorderPane gamePane = new BorderPane();
+    private final HBox LabelBox = new HBox();
+    @Getter
+    private static Scene scene;
+    @Getter
     private static Stage Game;
-
     public GameStage() {
-
         LabelBox.setPadding(new Insets(15, 12, 15, 12));
         LabelBox.setSpacing(20);
         LabelBox.setAlignment(Pos.TOP_CENTER);
-
-
         IntegerProperty counter = new SimpleIntegerProperty(0);
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1000), new KeyValue(counter, 1000)));
         timer.textProperty().bind(Bindings.createStringBinding(() -> Integer.toString(counter.get()), counter));
-
         life.textProperty().bind(Bindings.createStringBinding(() -> Integer.toString(counterLife.get()), counter));
         point.textProperty().bind(Bindings.createStringBinding(() -> Integer.toString(counterPoint.get()), counter));
-
-
-        LabelBox.getChildren().addAll(TimeTimer,timer,lifeLife,life,pointPoint,point);
+        Label timeTimer = new Label("Time:");
+        Label lifeLife = new Label("Life:");
+        Label pointPoint = new Label("Points:");
+        LabelBox.getChildren().addAll(timeTimer,timer, lifeLife,life, pointPoint,point);
         LabelBox.setStyle("-fx-background-color: #59AB7C");
-
-
         EGG.setFill(Color.WHITE);
 
-
         try {
-            image1 = new Image(new FileInputStream("Board1.jpg"));
-            image2 = new Image(new FileInputStream("Board2.jpg"));
-            image3 = new Image(new FileInputStream("Board3.jpg"));
-            image4 = new Image(new FileInputStream("Board4.jpg"));
-
-
-
+            image1 = new Image(new FileInputStream("src/main/resources/Board1.jpg"));
+            image2 = new Image(new FileInputStream("src/main/resources/Board2.jpg"));
+            image3 = new Image(new FileInputStream("src/main/resources/Board3.jpg"));
+            image4 = new Image(new FileInputStream("src/main/resources/Board4.jpg"));
         }
         catch (FileNotFoundException e){
-            e.printStackTrace();
+            System.err.println(e.getMessage());
             System.out.println("Brak plików graficznych");
-
         }
 
-
         imageView = new ImageView();
-
-
-
         imageView.setImage(image1);
         imageView.setX(0);
         imageView.setY(50);
         imageView.setFitWidth(1100);
         imageView.setFitHeight(700);
         imageView.setPreserveRatio(true);
-
         backG.getChildren().add(imageView);
-
-
-
         gamePane.setTop(LabelBox);
         gamePane.setBottom(backG);
-
-
-        gameS = new Scene(gamePane, 1100, 750);
-        gameS.getStylesheets().add("styleGame.css");
-
-
-
+        scene = new Scene(gamePane, 1100, 750);
+        scene.getStylesheets().add("CSSstyles/styleGame.css");
         Game = new Stage();
-
         Game.setTitle("Game");
         Game.initModality(Modality.APPLICATION_MODAL);
-
-        Game.setScene(gameS);
+        Game.setScene(scene);
         timeline.play();
-    }
-
-
-
-    public static Stage getGame() {
-        return Game;
-    }
-    public static Scene getScene() {
-        return gameS;
     }
 
 
@@ -173,36 +117,6 @@ public class GameStage {
     }
 
 
-    public Image getImage1() {
-        return image1;
-    }
 
-    public Image getImage2() {
-        return image2;
-    }
-
-    public Image getImage3() {
-        return image3;
-    }
-
-    public Image getImage4() {
-        return image4;
-    }
-
-    public ImageView getImageView() {
-        return imageView;
-    }
-
-    public Group getBackG() {
-        return backG;
-    }
-
-    public Ellipse getEGG() {
-        return EGG;
-    }
-
-    public int getMickeyPoz() {
-        return MickeyPoz;
-    }
 
 }
